@@ -142,7 +142,7 @@ class Video(models.Model):
     title = models.CharField(max_length=255)
     slug = models.SlugField()
     still = models.FileField(upload_to='video_stills', blank=True, help_text='An image that will be used as a thumbnail.')
-    video = models.FilePathField(path=settings.MEDIA_ROOT+'videos/', recursive=True)
+    video = models.FilePathField(path=settings.MEDIA_ROOT+ '/uploads', recursive=True)
     description = models.TextField(blank=True)
     tags = TagField()
     uploaded = models.DateTimeField(auto_now_add=True)
@@ -153,6 +153,11 @@ class Video(models.Model):
 
     def __unicode__(self):
         return '%s' % self.title
+        
+    def url(self):
+        path = self._meta.get_field('video').path
+        return self.video.replace(path, '', 1)
+ 
 
     @permalink
     def get_absolute_url(self):

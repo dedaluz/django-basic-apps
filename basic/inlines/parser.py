@@ -7,27 +7,35 @@ from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
 
 
-def inlines(value, return_list=False):
-    try:
-        from BeautifulSoup import BeautifulStoneSoup
-    except ImportError:
-        from beautifulsoup import BeautifulStoneSoup
 
-    content = BeautifulStoneSoup(value, selfClosingTags=['inline','img','br','input','meta','link','hr'])
+def inlines(value, return_list=False):
+    
+    try:
+        from bs4 import BeautifulSoup
+    except ImportError:
+        from bs4 import BeautifulSoup
+        
+    content = BeautifulSoup(value)
+
     inline_list = []
 
     if return_list:
-        for inline in content.findAll('inline'):
+        for inline in content.find_all('inline'):
             rendered_inline = render_inline(inline)
             inline_list.append(rendered_inline['context'])
         return inline_list
     else:
-        for inline in content.findAll('inline'):
+        for inline in content.find_all('inline'):
             rendered_inline = render_inline(inline)
+            
             if rendered_inline:
-                inline.replaceWith(render_to_string(rendered_inline['template'], rendered_inline['context']))
+                replace = render_to_string(rendered_inline['template'], rendered_inline['context'])
+                soup = BeautifulSoup(replace)
+                inline.replace_with(soup)
+                
             else:
                 inline.replaceWith('')
+            
         return mark_safe(content)
 
 
@@ -92,4 +100,5 @@ def render_inline(inline):
     template = ["inlines/%s_%s.html" % (app_label, model_name), "inlines/default.html"]
     rendered_inline = {'template':template, 'context':context}
 
+   
     return rendered_inline

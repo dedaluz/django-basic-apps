@@ -7,9 +7,11 @@
 {% autoescape off %}
 <div{% if class %} class="{{ class }}"{% endif %}>
 
-    <p class="photo">
-        <a href="{% url photo_detail object.slug %}" title="{% trans "View the full image" %}"><img src="{{ settings.MEDIA_URL }}{{ object.photo }}" alt="{{ object }}" /></a>
+    <p class="video">
+        <a href="{% url video_detail object.slug %}" title="{% trans "View the full image" %}"></a>
+        
     </p>
+    <video controls src="{{ settings.MEDIA_URL }}uploads{{ object.url }}" alt="{{ object }}" > </video>
     {% if object.taken_by %}<p class="taken_by">{% trans "By" %} {{ object.taken_by }}</p>{% endif %}
     {% if object.description %}<p class="description">{{ object.description }}</p>{% endif %}
 </div>
