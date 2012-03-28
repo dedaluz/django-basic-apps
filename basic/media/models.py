@@ -3,8 +3,7 @@ from django.db.models import permalink
 from django.conf import settings
 from tagging.fields import TagField
 
-import tagging
-
+from taggit_autosuggest.managers import TaggableManager
 
 class AudioSet(models.Model):
     """AudioSet model"""
@@ -33,7 +32,7 @@ class Audio(models.Model):
     still = models.FileField(upload_to='audio_stills', blank=True, help_text='An image that will be used as a thumbnail.')
     audio = models.FilePathField(path=settings.MEDIA_ROOT+'audios/', recursive=True)
     description = models.TextField(blank=True)
-    tags = TagField()
+    tags = TaggableManager()
     uploaded = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
 
@@ -86,7 +85,7 @@ class Photo(models.Model):
     taken_by = models.CharField(max_length=100, blank=True)
     license = models.URLField(blank=True, choices=LICENSES)
     description = models.TextField(blank=True)
-    tags = TagField()
+    tags = TaggableManager()
     uploaded = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
     _exif = models.TextField(blank=True) 
@@ -144,7 +143,7 @@ class Video(models.Model):
     still = models.FileField(upload_to='video_stills', blank=True, help_text='An image that will be used as a thumbnail.')
     video = models.FilePathField(path=settings.MEDIA_ROOT+ '/uploads', recursive=True)
     description = models.TextField(blank=True)
-    tags = TagField()
+    tags = TaggableManager()
     uploaded = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
 

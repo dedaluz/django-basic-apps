@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from tagging.fields import TagField
+from taggit_autosuggest.managers import TaggableManager
 
 
 class Bookmark(models.Model):
@@ -12,8 +12,8 @@ class Bookmark(models.Model):
     extended = models.TextField(_('extended'), blank=True)
     created = models.DateTimeField(_('created'), auto_now_add=True)
     modified = models.DateTimeField(_('modified'), auto_now=True)
-    tags = TagField()
-
+    tags = TaggableManager()
+    
     class Meta:
         verbose_name = _('bookmark')
         verbose_name_plural = _('bookmarks')
