@@ -54,9 +54,14 @@ class Movie(models.Model):
     studio = models.ForeignKey(Studio, blank=True, null=True)
     released = models.DateField(blank=True, null=True)
     asin = models.CharField(blank=True, max_length=100)
-    cover = models.FileField(upload_to='films', blank=True)
+    imdb = models.CharField(blank=True, max_length=100)
+    tmdb = models.CharField(blank=True, max_length=100)
+    cover = models.FileField(upload_to='films/covers', blank=True)
+    backdrop = models.FileField(upload_to='films/backdrops', blank=True)
     review = models.TextField(blank=True)
     genre = models.ManyToManyField(Genre, blank=True)
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = 'movies'
@@ -80,6 +85,14 @@ class Movie(models.Model):
         except:
             return 'http://www.amazon.com/dp/%s/' % self.asin
 
+    @property
+    def imdb_url(self):
+        return 'http://www.imdb.com/title/tt%s' % self.imdb
+
+    @property
+    def tmdb_url(self):
+        return 'http://www.themoviedb.org/movie/%s' % self.tmdb
+                    
     @property
     def cover_url(self):
         return '%s%s' % (settings.MEDIA_URL, self.cover)
