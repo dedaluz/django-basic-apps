@@ -10,4 +10,31 @@
 
 
 {% block content %}
+{% load i18n %}
+
+{% if object %}
+
+{% autoescape off %}
+<div{% if class %} class="{{ class }}"{% endif %}>
+
+    <p class="photo">
+        <a href="{% url photo_detail object.slug %}" title="{% trans "View the full image" %}"><img src="{{ MEDIA_URL }}{{ object.photo }}" alt="{{ object }}" /></a>
+    </p>
+    {% if object.taken_by %}<p class="taken_by">{% trans "By" %} {{ object.taken_by }}</p>{% endif %}
+    {% if object.description %}<p class="description">{{ object.description }}</p>{% endif %}
+</div>
+{% endautoescape %}
+{% else %}
+
+<div{% if class %} class="{{ class }}"{% endif %}>
+    {% for object in object_list %}    
+        <p class="photo">
+            <a href="{% url photo_detail object.slug %}" title="{% trans "View the full image" %}"><img src="{{ settings.MEDIA_URL }}{{ object.photo }}" alt="{{ object }}" /></a>
+        </p>
+        {% if object.taken_by %}<p class="taken_by">{% trans "By" %} {{ object.taken_by }}</p>{% endif %}
+        {% if object.description %}<p class="description">{{ object.description }}</p>{% endif %}
+    {% endfor %}
+</div>
+
+{% endif %}
 {% endblock %}
