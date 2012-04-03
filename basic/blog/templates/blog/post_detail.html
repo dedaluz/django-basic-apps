@@ -21,7 +21,7 @@
 
 
 {% block content %}
-  {% load blog comments tagging_tags inlines markup %}
+  {% load blog comments inlines markup parsing %}
 
   <p class="date">{{ object.publish|date:"j F Y" }}</p>
 
@@ -29,12 +29,21 @@
     {{ object.body|safe|markdown|render_inlines }}
   </div>
 
-  {% tags_for_object object as tag_list %}
-  {% if tag_list %}
-  <p class="inline_tag_list"><strong>{% trans "Related tags" %}:</strong>
-    {{ tag_list|join:", " }}
-  </p>
+  {% if object.tags %}
+  <p class="inline_tag_list"><strong>{% trans "Related tags" %}:</strong></p>
+  <ul>
+       {% for tag in object.tags.all %}
+         <li><a href="/list/{{ tag.name }}">{{ tag.name }}</a></li>
+       {% endfor %}
+  </ul>
   {% endif %}
+    
+  <p class="links_list"><strong>{% trans "Mentioned Links" %}:</strong></p>
+    <ul>
+         {% for link in object.body|markdown|get_links %}
+           <li><a href="{{ link.href }}">{{ link.title }}</a></li>
+         {% endfor %}
+    </ul>
 
   {% get_comment_list for object as comment_list %}
   {% if comment_list %}
