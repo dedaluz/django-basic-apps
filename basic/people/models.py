@@ -5,8 +5,12 @@ from django.db.models import permalink
 from django.contrib.auth.models import User
 from taggit_autosuggest.managers import TaggableManager
 
+from sorl.thumbnail import ImageField
+
 import datetime
 import dateutil
+
+from basic.places.models import Place
 
 
 class PersonType(models.Model):
@@ -40,9 +44,11 @@ class Person(models.Model):
     slug = models.SlugField(_('slug'), unique=True)
     user = models.ForeignKey(User, blank=True, null=True, help_text='If the person is an existing user of your site.')
     gender = models.PositiveSmallIntegerField(_('gender'), choices=GENDER_CHOICES, blank=True, null=True)
-    mugshot = models.FileField(_('mugshot'), upload_to='mugshots', blank=True)
+    mugshot  = ImageField(_('picture'), upload_to='people_mugshots', blank=True)
     mugshot_credit = models.CharField(_('mugshot credit'), blank=True, max_length=200)
     birth_date = models.DateField(_('birth date'), blank=True, null=True)
+    origin_place = models.ForeignKey(Place, blank=True, null=True)
+    living_place = models.ForeignKey(Place, blank=True, null=True)
     person_types = models.ManyToManyField(PersonType, blank=True)
     website = models.URLField(_('website'), blank=True, verify_exists=True)
 
