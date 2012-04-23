@@ -13,22 +13,3 @@ class PersonAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('first_name','last_name')}
 admin.site.register(Person, PersonAdmin)
 
-
-class QuoteAdmin(admin.ModelAdmin):
-    list_display = ('person','quote')
-    list_filter = ('person',)
-    search_fields = ('quote',)
-admin.site.register(Quote, QuoteAdmin)
-
-
-class ConversationItemInline(admin.StackedInline):
-    model = ConversationItem
-    fk = 'conversation'
-
-
-class ConversationAdmin(admin.ModelAdmin):
-    inlines = [
-        ConversationItemInline
-    ]
-admin.site.register(Conversation, ConversationAdmin)
-admin.site.register(ConversationItem)

@@ -2,7 +2,6 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from taggit_autosuggest.managers import TaggableManager
 
-
 class Bookmark(models.Model):
     """Bookmarks model"""
     title = models.CharField(max_length=100, blank=True, null=True)

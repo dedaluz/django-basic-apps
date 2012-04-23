@@ -47,10 +47,10 @@ class Person(models.Model):
     mugshot  = ImageField(_('picture'), upload_to='people_mugshots', blank=True)
     mugshot_credit = models.CharField(_('mugshot credit'), blank=True, max_length=200)
     birth_date = models.DateField(_('birth date'), blank=True, null=True)
-    origin_place = models.ForeignKey(Place, blank=True, null=True)
-    living_place = models.ForeignKey(Place, blank=True, null=True)
+    origin_place = models.ForeignKey(Place, blank=True, null=True, related_name='origin_place')
+    living_place = models.ForeignKey(Place, blank=True, null=True, related_name='living_place')
     person_types = models.ManyToManyField(PersonType, blank=True)
-    website = models.URLField(_('website'), blank=True, verify_exists=True)
+    website = models.URLField(_('website'), blank=True)
 
     class Meta:
         verbose_name = _('person')
@@ -73,45 +73,3 @@ class Person(models.Model):
     @permalink
     def get_absolute_url(self):
         return ('person_detail', None, {'slug': self.slug})
-
-
-class Quote(models.Model):
-    """Quote model."""
-    person = models.ForeignKey(Person)
-    quote = models.TextField(_('quote'))
-    source = models.CharField(_('source'), blank=True, max_length=255)
-
-    class Meta:
-        verbose_name = 'quote'
-        verbose_name_plural = 'quotes'
-        db_table = 'people_quotes'
-
-    def __unicode__(self):
-        return u'%s' % self.quote
-
-    @permalink
-    def get_absolute_url(self):
-        return ('quote_detail', None, {'quote_id': self.pk})
-
-
-class Conversation(models.Model):
-    """A conversation between two or many people."""
-    title = models.CharField(blank=True, max_length=200)
-
-    def __unicode__(self):
-        return self.title
-
-
-class ConversationItem(models.Model):
-    """An item within a conversation."""
-    conversation      = models.ForeignKey(Conversation, related_name='items')
-    order             = models.PositiveSmallIntegerField()
-    speaker           = models.ForeignKey(Person)
-    quote             = models.TextField()
-
-    class Meta:
-        ordering = ('conversation', 'order')
-        unique_together = (('conversation', 'order'),)
-
-    def __unicode__(self):
-        return u'%s: %s' % (self.speaker.first_name, self.quote)

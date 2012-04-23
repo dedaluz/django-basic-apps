@@ -3,8 +3,6 @@ from django.utils.translation import ugettext_lazy as _
 from django.db.models import permalink
 from django.contrib.localflavor.us.models import PhoneNumberField
 
-from taggit_autosuggest.managers import TaggableManager
-
 
 class PlaceType(models.Model):
     """Place types model."""
@@ -84,7 +82,6 @@ class Place(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
     place_types = models.ManyToManyField(PlaceType, blank=True)
-    tags = TaggableManager()
 
     class Meta:
         verbose_name = _('place')

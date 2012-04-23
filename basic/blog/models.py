@@ -11,7 +11,6 @@ import datetime
 from taggit_autosuggest.managers import TaggableManager
 
 
-
 class Category(models.Model):
     """Category model."""
     title = models.CharField(_('title'), max_length=100)
