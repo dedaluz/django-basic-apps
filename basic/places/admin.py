@@ -16,6 +16,7 @@ class PointAdmin(admin.ModelAdmin):
     list_display = ('address', 'city', 'zip', 'latitude', 'longitude')
     list_filter = ('city',)
     search_fields = ('address',)
+    list_display_links = ('address', 'city', 'latitude', 'longitude')
 admin.site.register(Point, PointAdmin)
 
 

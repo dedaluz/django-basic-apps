@@ -36,7 +36,7 @@ class City(models.Model):
         ordering = ('state', 'city',)
 
     def __unicode__(self):
-        return u'%s, %s' % (self.city, self.state)
+        return u'%s' % self.city
 
     @permalink
     def get_absolute_url(self):
@@ -59,7 +59,10 @@ class Point(models.Model):
         ordering = ('address',)
 
     def __unicode__(self):
-        return u'%s' % self.address
+        if self.address:
+            return u'%s, %s' % (self.address, self.city.city)
+        else:
+            return u'%s' % self.city.city
 
 
 class Place(models.Model):

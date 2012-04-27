@@ -8,7 +8,7 @@ from taggit_autosuggest.managers import TaggableManager
 from sorl.thumbnail import ImageField
 
 import datetime
-import dateutil
+from dateutil import relativedelta
 
 from basic.places.models import Place
 
@@ -63,12 +63,15 @@ class Person(models.Model):
 
     @property
     def full_name(self):
-        return u'%s %s' % (self.first_name, self.last_name)
+        return u'%s %s %s' % (self.first_name, self.middle_name, self.last_name)
 
     @property
     def age(self):
         TODAY = datetime.date.today()
-        return u'%s' % dateutil.relativedelta(TODAY, self.birth_date).years
+        if self.birth_date:
+            return u"%s" % relativedelta.relativedelta(TODAY, self.birth_date).years
+        else:
+            return None
 
     @permalink
     def get_absolute_url(self):
