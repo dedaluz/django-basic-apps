@@ -1,9 +1,11 @@
 from django.db import models
 from django.db.models import permalink
 from django.conf import settings
-from tagging.fields import TagField
+from django.utils.translation import ugettext_lazy as _
 
 from taggit_autosuggest.managers import TaggableManager
+from sorl.thumbnail import ImageField
+
 
 class AudioSet(models.Model):
     """AudioSet model"""
@@ -48,29 +50,29 @@ class Audio(models.Model):
       return ('audio_detail', None, { 'slug': self.slug })
 
 
-class PhotoSet(models.Model):
-    """PhotoSet model"""
+class PictureSet(models.Model):
+    """PictureSet model"""
     title = models.CharField(max_length=255)
     slug = models.SlugField()
     description = models.TextField(blank=True)
-    cover_photo = models.ForeignKey('Photo', blank=True, null=True)
-    photos = models.ManyToManyField('Photo', related_name='photo_sets')
+    cover_picture = models.ForeignKey('Picture', blank=True, null=True)
+    pictures = models.ManyToManyField('Picture', related_name='picture_sets')
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
 
     class Meta:
-      db_table = 'media_photo_sets'
+      db_table = 'media_picture_sets'
 
     def __unicode__(self):
       return '%s' % self.title
 
     @permalink
     def get_absolute_url(self):
-      return ('photo_set_detail', None, { 'slug': self.slug })
+      return ('picture_set_detail', None, { 'slug': self.slug })
 
 
-class Photo(models.Model):
-    """Photo model"""
+class Picture(models.Model):
+    """Picture model"""
     LICENSES = (
         ('http://creativecommons.org/licenses/by/2.0/',         'CC Attribution'),
         ('http://creativecommons.org/licenses/by-nd/2.0/',      'CC Attribution-NoDerivs'),
@@ -81,7 +83,7 @@ class Photo(models.Model):
     )
     title = models.CharField(max_length=255)
     slug = models.SlugField()
-    photo = models.FileField(upload_to="photos")
+    image = ImageField(verbose_name=_('image'), upload_to='images')
     taken_by = models.CharField(max_length=100, blank=True)
     license = models.URLField(blank=True, choices=LICENSES)
     description = models.TextField(blank=True)
@@ -91,7 +93,7 @@ class Photo(models.Model):
     _exif = models.TextField(blank=True) 
 
     class Meta:
-        db_table = 'media_photos'
+        db_table = 'media_pictures'
 
     def _set_exif(self, d):
         self._exif = simplejson.dumps(d)
@@ -102,18 +104,18 @@ class Photo(models.Model):
         else:
             return {}
 
-    exif = property(_get_exif, _set_exif, "Photo EXIF data, as a dict.")
+    exif = property(_get_exif, _set_exif, "Picture EXIF data, as a dict.")
 
     def __unicode__(self):
         return '%s' % self.title
 
     @property
     def url(self):
-        return '%s%s' % (settings.MEDIA_URL, self.photo)
+        return '%s%s' % (settings.MEDIA_URL, self.picture)
 
     @permalink
     def get_absolute_url(self):
-        return ('photo_detail', None, { 'slug': self.slug })
+        return ('picture_detail', None, { 'slug': self.slug })
 
 
 class VideoSet(models.Model):

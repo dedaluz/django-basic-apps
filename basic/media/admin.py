@@ -12,14 +12,14 @@ class AudioAdmin(admin.ModelAdmin):
 admin.site.register(Audio, AudioAdmin)
 
 
-class PhotoSetAdmin(admin.ModelAdmin):
+class PictureSetAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('title',)}
-admin.site.register(PhotoSet, PhotoSetAdmin)
+admin.site.register(PictureSet, PictureSetAdmin)
 
 
-class PhotoAdmin(admin.ModelAdmin):
+class PictureAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('title',)}
-admin.site.register(Photo, PhotoAdmin)
+admin.site.register(Picture, PictureAdmin)
 
 
 class VideoSetAdmin(admin.ModelAdmin):
